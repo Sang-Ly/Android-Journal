@@ -4,11 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".JournalPage4">
+    tools:context=".JournalPage1">
 
 
     <android.support.design.widget.TextInputLayout
-        android:id="@+id/page4TextInput"
+        android:id="@+id/page1TextInput"
         android:layout_width="395dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -18,7 +18,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <android.support.design.widget.TextInputEditText
-            android:id="@+id/page4EditText"
+            android:id="@+id/page1EditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </android.support.design.widget.TextInputLayout>
@@ -31,7 +31,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
-        android:text="Back"
+        android:text="Journal"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -48,7 +48,6 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:imeOptions="actionDone"
         android:id="@+id/titleEditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -58,11 +57,13 @@
         android:background="@null"
         android:ems="10"
         android:hint="Title"
+        android:imeOptions="actionDone"
         android:textAlignment="center"
         android:textStyle="bold"
         android:inputType="textPersonName"
         android:textSize="30sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 
 </android.support.constraint.ConstraintLayout>

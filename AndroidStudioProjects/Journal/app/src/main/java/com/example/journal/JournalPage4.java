@@ -14,17 +14,23 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
+import static com.example.journal.MainActivity.Login;
+import static com.example.journal.signUp.combine_user_pass;
+
 public class JournalPage4 extends AppCompatActivity {
 
     TextInputLayout page4InputText;
     TextInputEditText page4EditText;
+    EditText titleEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +41,9 @@ public class JournalPage4 extends AppCompatActivity {
 
         page4InputText = (TextInputLayout) findViewById(R.id.page4TextInput);
         page4EditText = (TextInputEditText) findViewById(R.id.page4EditText);
+        titleEditText = (EditText) findViewById(R.id.titleEditText);
         loadPage1();
+        loadPage1Title();
 
         Button nextButton = (Button) findViewById(R.id.nextButton);
         nextButton.setOnClickListener(new View.OnClickListener(){
@@ -49,7 +57,6 @@ public class JournalPage4 extends AppCompatActivity {
                 back_Go_page_3();
             }
         });
-
     }
 
     @Override
@@ -62,15 +69,27 @@ public class JournalPage4 extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()){
-            case R.id.save:
+            case R.id.save: {
+                // hide keyboard
+                titleEditText.onEditorAction(EditorInfo.IME_ACTION_DONE);
+                page4EditText.onEditorAction(EditorInfo.IME_ACTION_DONE);
                 save();
+            }
                 return true;
             case R.id.About:
                 showAbout();
                 return true;
+            case R.id.Logout:
+                showLoginPage();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public void showLoginPage(){
+        Intent startNewActivity = new Intent(this, MainActivity.class);
+        startActivity(startNewActivity);
     }
 
     // Save page
@@ -86,6 +105,7 @@ public class JournalPage4 extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 savePage1();
+                savePage1Title();
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -118,14 +138,28 @@ public class JournalPage4 extends AppCompatActivity {
     public void savePage1(){
         SharedPreferences spPage1 = getSharedPreferences(STORE_PAGE_4,MODE_PRIVATE);
         SharedPreferences.Editor edPage1 = spPage1.edit();
-        edPage1.putString(Page_4_info, page4EditText.getText().toString());
+        edPage1.putString(Page_4_info+Login, page4EditText.getText().toString());
         edPage1.apply();
 
     }
     public void loadPage1(){
         SharedPreferences page1 = getSharedPreferences(STORE_PAGE_4, MODE_PRIVATE);
-        page4EditText.setText(page1.getString(Page_4_info,"").toString());
+        page4EditText.setText(page1.getString(Page_4_info+Login,"").toString());
     }
 
+    // Store Title text information
+    public static final String STORE_PAGE_4_Title = "page_4_Title";
+    public static final String Page_4_Title_info = "page_4_Title_info";
+
+    public void savePage1Title(){
+        SharedPreferences spPage1 = getSharedPreferences(STORE_PAGE_4_Title,MODE_PRIVATE);
+        SharedPreferences.Editor edPage1 = spPage1.edit();
+        edPage1.putString(Page_4_Title_info+Login, titleEditText.getText().toString());
+        edPage1.apply();
+    }
+    public void loadPage1Title(){
+        SharedPreferences page1 = getSharedPreferences(STORE_PAGE_4_Title, MODE_PRIVATE);
+        titleEditText.setText(page1.getString(Page_4_Title_info+Login,"").toString());
+    }
 
 }

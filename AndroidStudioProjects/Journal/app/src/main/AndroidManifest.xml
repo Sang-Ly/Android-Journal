@@ -10,10 +10,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".AboutJournal"></activity>
+        <activity android:name=".JournalPage1"></activity>
         <activity android:name=".JournalPage2"></activity>
         <activity android:name=".JournalPage3"></activity>
         <activity android:name=".JournalPage4"></activity>
         <activity android:name=".JournalPage5"></activity>
+        <activity android:name=".signUp"></activity>
+        <activity android:name=".Journal"></activity>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

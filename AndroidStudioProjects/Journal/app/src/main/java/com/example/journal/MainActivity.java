@@ -1,124 +1,128 @@
 package com.example.journal;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.design.widget.TextInputEditText;
-import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.TextView;
+import android.widget.EditText;
 import android.widget.Toast;
-
-import org.w3c.dom.Text;
 
 public class MainActivity extends AppCompatActivity {
 
-    TextInputLayout page1InputText;
-    TextInputEditText page1EditText;
+    // sign up button click
+    Button signUpButton;
+
+    // Log in button click
+    Button loginButton;
+    EditText usernameEditText;
+    EditText passwordEditText;
+    String login_username;
+    String login_password;
+    String verify_user_pass;
+    static String Login;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        setTitle("Page 1");
+        setTitle("Journal by Sang Ly");
 
-        page1InputText = (TextInputLayout) findViewById(R.id.page1TextInput);
-        page1EditText = (TextInputEditText) findViewById(R.id.page1EditText);
-        loadPage1();
+        // Sign up
 
-        Button backButton = (Button) findViewById(R.id.backButton);
-        backButton.setVisibility(View.GONE);
-
-        Button nextButton = (Button) findViewById(R.id.nextButton);
-        nextButton.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
-                next_Go_Page_2();
+        signUpButton = (Button) findViewById(R.id.signUpButton);
+        signUpButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                open_sign_up_page();
             }
         });
 
+        // end sign up
+
+        // Log in
+
+        usernameEditText = (EditText) findViewById(R.id.usernameEditText);
+        usernameEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        passwordEditText = (EditText) findViewById(R.id.passwordEditText);
+        passwordEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        loginButton = (Button) findViewById(R.id.loginButton);
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                load_account();
+            }
+        });
+
+
+        // end Log in
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater MI = getMenuInflater();
-        MI.inflate(R.menu.journal, menu);
-        return true;
+    // Sign up
+    public void open_sign_up_page(){
+        Intent startNewActivity = new Intent(this, signUp.class);
+        startActivity(startNewActivity);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()){
-            case R.id.save:
-                save();
-                return true;
-            case R.id.About:
-                showAbout();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+    // log in
+
+    private static String USERNAME_PASSWORD = "Journal_By_Sang_Ly";
+    private static String USERNAME_PASSWORD_INFO = "username_password_info";
+
+
+    public void load_account(){
+        login_username = usernameEditText.getText().toString();
+        login_password = passwordEditText.getText().toString();
+        Login = login_username  + login_password;
+
+        SharedPreferences page1 = getSharedPreferences(USERNAME_PASSWORD, MODE_PRIVATE);
+        verify_user_pass = page1.getString(USERNAME_PASSWORD_INFO+Login,"");
+
+        if(verify_user_pass.toLowerCase().equals( Login.toLowerCase()) && Login.toLowerCase() !=  ""){
+            access_journal();
+        }
+        else{
+            Login_Error_Message();
         }
     }
 
-    // Save page
-    // Upon click "save"
-    // two option are given "Cancel" "Save"
-    // "Cancel" will not save and keep text
-    // "Save" will save text when user exit app
-    public void save(){
+    public void access_journal(){
+        Intent startNewActivity = new Intent(this, Journal.class);
+        startActivity(startNewActivity);
+    }
+    public void Login_Error_Message(){
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-        builder.setMessage("Save this page");
+        builder.setMessage("Incorrect Username and Password");
         builder.setCancelable(false);
-        builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("Try again", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                savePage1();
-            }
-        });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
+                clear_user_pass();
             }
         });
         builder.show();
     }
 
-    public void showAbout(){
-        Intent startNewActivity = new Intent(this, AboutJournal.class);
-        startActivity(startNewActivity);
+    public void clear_user_pass(){
+        usernameEditText.setText("");
+        passwordEditText.setText("");
     }
-
-    public void next_Go_Page_2() {
-        Intent startNewActivity = new Intent(this, JournalPage2.class);
-        startActivity(startNewActivity);
-    }
-
-    public static final String STORE_PAGE_1 = "page1";
-    public static final String Page_1_info = "page1info";
-
-    public void savePage1(){
-        SharedPreferences spPage1 = getSharedPreferences(STORE_PAGE_1,MODE_PRIVATE);
-        SharedPreferences.Editor edPage1 = spPage1.edit();
-        edPage1.putString(Page_1_info, page1EditText.getText().toString());
-        edPage1.apply();
-
-
-    }
-    public void loadPage1(){
-        SharedPreferences page1 = getSharedPreferences(STORE_PAGE_1, MODE_PRIVATE);
-        page1EditText.setText(page1.getString(Page_1_info,"").toString());
-    }
-
 
 }

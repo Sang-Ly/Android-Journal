@@ -12,13 +12,19 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+
+import static com.example.journal.MainActivity.Login;
+import static com.example.journal.signUp.combine_user_pass;
 
 public class JournalPage2 extends AppCompatActivity {
 
     TextInputLayout page2InputText;
     TextInputEditText page2EditText;
+    EditText titleEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +35,9 @@ public class JournalPage2 extends AppCompatActivity {
 
         page2InputText = (TextInputLayout) findViewById(R.id.page2TextInput);
         page2EditText = (TextInputEditText) findViewById(R.id.page2EditText);
+        titleEditText = (EditText) findViewById(R.id.titleEditText);
         loadPage1();
+        loadPage1Title();
 
         Button nextButton = (Button) findViewById(R.id.nextButton);
         nextButton.setOnClickListener(new View.OnClickListener(){
@@ -56,15 +64,27 @@ public class JournalPage2 extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()){
-            case R.id.save:
+            case R.id.save: {
+                // hide keyboard
+                titleEditText.onEditorAction(EditorInfo.IME_ACTION_DONE);
+                page2EditText.onEditorAction(EditorInfo.IME_ACTION_DONE);
                 save();
+            }
                 return true;
             case R.id.About:
                 showAbout();
                 return true;
+            case R.id.Logout:
+                showLoginPage();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public void showLoginPage(){
+        Intent startNewActivity = new Intent(this, MainActivity.class);
+        startActivity(startNewActivity);
     }
 
     // Save page
@@ -80,6 +100,7 @@ public class JournalPage2 extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 savePage1();
+                savePage1Title();
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -97,7 +118,7 @@ public class JournalPage2 extends AppCompatActivity {
     }
 
     public void   back_Go_page_1(){
-        Intent startNewActivity = new Intent(this, MainActivity.class);
+        Intent startNewActivity = new Intent(this, JournalPage1.class);
         startActivity(startNewActivity);
     }
 
@@ -106,19 +127,34 @@ public class JournalPage2 extends AppCompatActivity {
         startActivity(startNewActivity);
     }
 
+    // Store main text information
     public static final String STORE_PAGE_2 = "page2";
     public static final String Page_2_info = "page2info";
 
     public void savePage1(){
         SharedPreferences spPage1 = getSharedPreferences(STORE_PAGE_2,MODE_PRIVATE);
         SharedPreferences.Editor edPage1 = spPage1.edit();
-        edPage1.putString(Page_2_info, page2EditText.getText().toString());
+        edPage1.putString(Page_2_info+Login, page2EditText.getText().toString());
         edPage1.apply();
-
-
     }
     public void loadPage1(){
         SharedPreferences page1 = getSharedPreferences(STORE_PAGE_2, MODE_PRIVATE);
-        page2EditText.setText(page1.getString(Page_2_info,"").toString());
+        page2EditText.setText(page1.getString(Page_2_info+Login,"").toString());
     }
+
+    // Store Title text information
+    public static final String STORE_PAGE_2_Title = "page_2_Title";
+    public static final String Page_2_Title_info = "page_2_Title_info";
+
+    public void savePage1Title(){
+        SharedPreferences spPage1 = getSharedPreferences(STORE_PAGE_2_Title,MODE_PRIVATE);
+        SharedPreferences.Editor edPage1 = spPage1.edit();
+        edPage1.putString(Page_2_Title_info+Login, titleEditText.getText().toString());
+        edPage1.apply();
+    }
+    public void loadPage1Title(){
+        SharedPreferences page1 = getSharedPreferences(STORE_PAGE_2_Title, MODE_PRIVATE);
+        titleEditText.setText(page1.getString(Page_2_Title_info+Login,"").toString());
+    }
+
 }
