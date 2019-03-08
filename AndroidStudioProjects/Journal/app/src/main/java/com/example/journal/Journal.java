@@ -35,8 +35,10 @@ public class Journal extends AppCompatActivity {
     Uri imageUri;
     String image_Convert_To_Base64;
 
-    // assign variable to their respect id
+    // assign variable to their respective id
     // load both title and image for front cover
+    // assign on click for add photo button
+    // click on photo or button will move to page 1 of journal
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,23 +65,26 @@ public class Journal extends AppCompatActivity {
         imageView.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                next_Go_Page_1();
+                next_button_go_page_1();
             }
         });
         Button nextButton = (Button) findViewById(R.id.nextButton);
         nextButton.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-                next_Go_Page_1();
+                next_button_go_page_1();
             }
         });
 
     }
 
+    // open gallery
     public void accessGallery(){
         Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
         startActivityForResult(gallery, Image);
     }
 
+    // get image from gallery
+    // place image into image view
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode, resultCode, data);
@@ -91,6 +96,7 @@ public class Journal extends AppCompatActivity {
         }
     }
 
+    // menu toolbar
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater MI = getMenuInflater();
@@ -98,6 +104,11 @@ public class Journal extends AppCompatActivity {
         return true;
     }
 
+    // switch
+    // selection based on id of item(s) on toolbar (menu)
+    // .save will hide soft keyboard and call the save function
+    // .about will call the about function
+    // .logout will call the logout function
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()){
@@ -117,6 +128,7 @@ public class Journal extends AppCompatActivity {
         }
     }
 
+    // jump to MainActivity page
     public void showLoginPage(){
         Intent startNewActivity = new Intent(this, MainActivity.class);
         startActivity(startNewActivity);
@@ -134,8 +146,8 @@ public class Journal extends AppCompatActivity {
         builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                savePageFrontCoverImage();
-                savePage1Title();
+                save_image();
+                save_title();
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -147,36 +159,44 @@ public class Journal extends AppCompatActivity {
         builder.show();
     }
 
+    // Display about page
     public void showAbout(){
         Intent startNewActivity = new Intent(this, AboutJournal.class);
         startActivity(startNewActivity);
     }
 
-    public void next_Go_Page_1() {
+    // Display page 1
+    public void next_button_go_page_1() {
         Intent startNewActivity = new Intent(this, JournalPage1.class);
         startActivity(startNewActivity);
     }
 
-
+    // declare variable
     public static final String STORE_FRONT_COVER = "front_cover";
     public static final String FRONT_COVER_INFO = "front_cover_info";
 
-    public void savePage1Title(){
-        SharedPreferences spPage1 = getSharedPreferences(STORE_FRONT_COVER,MODE_PRIVATE);
-        SharedPreferences.Editor edPage1 = spPage1.edit();
-        edPage1.putString(FRONT_COVER_INFO+Login, editText.getText().toString());
-        edPage1.apply();
-    }
-    public void load_title(){
-        SharedPreferences page1 = getSharedPreferences(STORE_FRONT_COVER, MODE_PRIVATE);
-        editText.setText(page1.getString(FRONT_COVER_INFO+Login,"").toString());
+    // save title into shared preferences
+    public void save_title(){
+        SharedPreferences sp = getSharedPreferences(STORE_FRONT_COVER,MODE_PRIVATE);
+        SharedPreferences.Editor edit = sp.edit();
+        edit.putString(FRONT_COVER_INFO+Login, editText.getText().toString());
+        edit.apply();
     }
 
-    public static final String STORE_FRONT_COVER_IMAGE = "front_cover_image87987979";
+    // load title from shared preferences
+    public void load_title(){
+        SharedPreferences sp = getSharedPreferences(STORE_FRONT_COVER, MODE_PRIVATE);
+        editText.setText(sp.getString(FRONT_COVER_INFO+Login,"").toString());
+    }
+
+    // declare variable
+    public static final String STORE_FRONT_COVER_IMAGE = "front_cover_image";
     public static final String FRONT_COVER_IMAGE_INFO = "front_cover_image_info";
     String Image_String_Of_Base64;
 
-    public void savePageFrontCoverImage(){
+    // save image to shared preferences
+    // convert image to base64 and save the string to shared preferences
+    public void save_image(){
         if(imageView.getDrawable() != null){
             BitmapDrawable drawable = (BitmapDrawable) imageView.getDrawable();
             Bitmap bitmap = drawable.getBitmap();
@@ -186,16 +206,17 @@ public class Journal extends AppCompatActivity {
             image_Convert_To_Base64 = Base64.encodeToString(bb, 0);
         }
 
-        SharedPreferences spPage1 = getSharedPreferences(STORE_FRONT_COVER_IMAGE,MODE_PRIVATE);
-        SharedPreferences.Editor edPage1 = spPage1.edit();
-        edPage1.putString(FRONT_COVER_IMAGE_INFO+Login, image_Convert_To_Base64);
-        edPage1.apply();
+        SharedPreferences sp = getSharedPreferences(STORE_FRONT_COVER_IMAGE,MODE_PRIVATE);
+        SharedPreferences.Editor edit = sp.edit();
+        edit.putString(FRONT_COVER_IMAGE_INFO+Login, image_Convert_To_Base64);
+        edit.apply();
     }
 
+    // load the image from shared preferences
+    // convert the string to bitmap and place image to image view
     public void load_image(){
-
-        SharedPreferences page1 = getSharedPreferences(STORE_FRONT_COVER_IMAGE, MODE_PRIVATE);
-        Image_String_Of_Base64 = (page1.getString(FRONT_COVER_IMAGE_INFO+Login,"").toString());
+        SharedPreferences sp = getSharedPreferences(STORE_FRONT_COVER_IMAGE, MODE_PRIVATE);
+        Image_String_Of_Base64 = (sp.getString(FRONT_COVER_IMAGE_INFO+Login,"").toString());
 
         if(Image_String_Of_Base64 != ""){
             byte[] decodedString = Base64.decode(Image_String_Of_Base64, Base64.DEFAULT);

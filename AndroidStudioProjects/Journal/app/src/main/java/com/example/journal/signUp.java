@@ -7,12 +7,12 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 public class signUp extends AppCompatActivity {
+
+    // declare variable
     Button createButton;
     Button backToLogInButton;
     EditText usernameEditText;
@@ -21,6 +21,9 @@ public class signUp extends AppCompatActivity {
     static String password;
     static String combine_user_pass;
 
+    // assign variable to their respective id
+    // set on click listener for both text box (username and password)
+    // set on click listener for both button (log in and sign up)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,22 +62,21 @@ public class signUp extends AppCompatActivity {
         });
     }
 
-    // validate username
-
+    // declare variable
     private static String VALIDATE_USERNAME = "Username";
     private static String VALIDATE_USERNAME_INFO = "username_info";
 
-
+    // verify if username is not null, or already taken
+    // verify if password is not null
+    // call username validation error message function if username or password is null
+    // or username is already taken
     public void validate_username(){
         username = usernameEditText.getText().toString();
         password = passwordEditText.getText().toString();
         String verify_username;
 
-        //Toast.makeText(getApplicationContext(),username,Toast.LENGTH_SHORT).show();
-
         SharedPreferences page1 = getSharedPreferences(VALIDATE_USERNAME, MODE_PRIVATE);
         verify_username = page1.getString(VALIDATE_USERNAME_INFO+username,"");
-
 
         if(username.equals("")){
             username_validation_fail_error_message("Username cannot be blank");
@@ -95,26 +97,26 @@ public class signUp extends AppCompatActivity {
         }
     }
 
-    // end validate username
-
-
+    // declare variable
     private static String USERNAME_PASSWORD = "Journal_By_Sang_Ly";
     private static String USERNAME_PASSWORD_INFO = "username_password_info";
 
-
+    // create account - share username and password to shared preferences
+    // call account create success function
     public void create_Account() {
         username = usernameEditText.getText().toString();
         password = passwordEditText.getText().toString();
         combine_user_pass = username + password;
 
-        SharedPreferences spPage1 = getSharedPreferences(USERNAME_PASSWORD, MODE_PRIVATE);
-        SharedPreferences.Editor edPage1 = spPage1.edit();
-        edPage1.putString(USERNAME_PASSWORD_INFO + combine_user_pass, combine_user_pass);
-        edPage1.apply();
+        SharedPreferences sp = getSharedPreferences(USERNAME_PASSWORD, MODE_PRIVATE);
+        SharedPreferences.Editor edit = sp.edit();
+        edit.putString(USERNAME_PASSWORD_INFO + combine_user_pass, combine_user_pass);
+        edit.apply();
 
         account_create_success();
-
     }
+
+    // display alert box
     public void account_create_success(){
         AlertDialog.Builder builder = new AlertDialog.Builder(signUp.this);
         builder.setMessage("Account Created");
@@ -128,11 +130,13 @@ public class signUp extends AppCompatActivity {
         builder.show();
     }
 
+    // display log in page
     public void back_To_Log_In(){
         Intent startNewActivity = new Intent(this, MainActivity.class);
         startActivity(startNewActivity);
     }
 
+    // display alert box
     public void username_validation_fail_error_message(String error_message){
         AlertDialog.Builder builder = new AlertDialog.Builder(signUp.this);
         builder.setMessage(error_message);
@@ -146,6 +150,7 @@ public class signUp extends AppCompatActivity {
         builder.show();
     }
 
+    // re-assign username and password edit text
     public void clear_user_pass(){
         usernameEditText.setText("");
         passwordEditText.setText("");

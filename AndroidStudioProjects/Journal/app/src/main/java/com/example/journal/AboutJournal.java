@@ -8,7 +8,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 // declare text view and button variable
-// link the variable to the their respect id in journal.xml
+// link the variable to the their respective id in journal.xml
 // set both text view to about and title respectively on the toolbar (menu)
 // open Journal when button (Main Menu) get clicked
 public class AboutJournal extends AppCompatActivity {

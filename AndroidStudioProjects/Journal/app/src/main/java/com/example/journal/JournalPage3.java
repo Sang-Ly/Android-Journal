@@ -1,7 +1,5 @@
 package com.example.journal;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,23 +13,22 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import org.w3c.dom.Text;
 
 import static com.example.journal.MainActivity.Login;
-import static com.example.journal.signUp.combine_user_pass;
 
 public class JournalPage3 extends AppCompatActivity {
 
+    // declare variable
     TextInputLayout page3InputText;
     TextInputEditText page3EditText;
     EditText titleEditText;
 
+    // assign variables to their respective id
+    // load both page and title
+    // call page 4 function when next button get click
+    // call page 2 function when back button get click
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,8 +39,8 @@ public class JournalPage3 extends AppCompatActivity {
         page3InputText = (TextInputLayout) findViewById(R.id.page3TextInput);
         page3EditText = (TextInputEditText) findViewById(R.id.page3EditText);
         titleEditText = (EditText) findViewById(R.id.titleEditText);
-        loadPage1();
-        loadPage1Title();
+        load_page();
+        load_title();
 
         Button nextButton = (Button) findViewById(R.id.nextButton);
         nextButton.setOnClickListener(new View.OnClickListener(){
@@ -59,6 +56,7 @@ public class JournalPage3 extends AppCompatActivity {
         });
     }
 
+    // menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater MI = getMenuInflater();
@@ -66,6 +64,10 @@ public class JournalPage3 extends AppCompatActivity {
         return true;
     }
 
+    // switch
+    // .save - hide soft keyboard and call save function
+    // .about call about function
+    // .logout call logout function
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()){
@@ -87,6 +89,7 @@ public class JournalPage3 extends AppCompatActivity {
         }
     }
 
+    // display log in page
     public void showLoginPage(){
         Intent startNewActivity = new Intent(this, MainActivity.class);
         startActivity(startNewActivity);
@@ -104,8 +107,8 @@ public class JournalPage3 extends AppCompatActivity {
         builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                savePage1();
-                savePage1Title();
+                save_page();
+                save_title();
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -117,49 +120,58 @@ public class JournalPage3 extends AppCompatActivity {
         builder.show();
     }
 
+    // display about page
     public void showAbout(){
         Intent startNewActivity = new Intent(this, AboutJournal.class);
         startActivity(startNewActivity);
     }
 
+    // show page 2
     public void   back_Go_page_2(){
         Intent startNewActivity = new Intent(this, JournalPage2.class);
         startActivity(startNewActivity);
     }
 
+    // show page 4
     public void next_Go_Page_4() {
         Intent startNewActivity = new Intent(this, JournalPage4.class);
         startActivity(startNewActivity);
     }
 
+    // declare variable
     public static final String STORE_PAGE_3 = "page3";
     public static final String Page_3_info = "page3info";
 
-    public void savePage1(){
-        SharedPreferences spPage1 = getSharedPreferences(STORE_PAGE_3,MODE_PRIVATE);
-        SharedPreferences.Editor edPage1 = spPage1.edit();
-        edPage1.putString(Page_3_info+Login, page3EditText.getText().toString());
-        edPage1.apply();
-
-    }
-    public void loadPage1(){
-        SharedPreferences page1 = getSharedPreferences(STORE_PAGE_3, MODE_PRIVATE);
-        page3EditText.setText(page1.getString(Page_3_info+Login,"").toString());
+    // save page to shared preferences
+    public void save_page(){
+        SharedPreferences sp = getSharedPreferences(STORE_PAGE_3,MODE_PRIVATE);
+        SharedPreferences.Editor edit = sp.edit();
+        edit.putString(Page_3_info+Login, page3EditText.getText().toString());
+        edit.apply();
     }
 
-    // Store Title text information
+    // load page from shared preferences
+    public void load_page(){
+        SharedPreferences sp = getSharedPreferences(STORE_PAGE_3, MODE_PRIVATE);
+        page3EditText.setText(sp.getString(Page_3_info+Login,"").toString());
+    }
+
+    // declare variable
     public static final String STORE_PAGE_3_Title = "page_3_Title";
     public static final String Page_3_Title_info = "page_3_Title_info";
 
-    public void savePage1Title(){
-        SharedPreferences spPage1 = getSharedPreferences(STORE_PAGE_3_Title,MODE_PRIVATE);
-        SharedPreferences.Editor edPage1 = spPage1.edit();
-        edPage1.putString(Page_3_Title_info+Login, titleEditText.getText().toString());
-        edPage1.apply();
+    // save title to shared preferences
+    public void save_title(){
+        SharedPreferences sp = getSharedPreferences(STORE_PAGE_3_Title,MODE_PRIVATE);
+        SharedPreferences.Editor edit = sp.edit();
+        edit.putString(Page_3_Title_info+Login, titleEditText.getText().toString());
+        edit.apply();
     }
-    public void loadPage1Title(){
-        SharedPreferences page1 = getSharedPreferences(STORE_PAGE_3_Title, MODE_PRIVATE);
-        titleEditText.setText(page1.getString(Page_3_Title_info+Login,"").toString());
+
+    // load title from shared preferences
+    public void load_title(){
+        SharedPreferences sp = getSharedPreferences(STORE_PAGE_3_Title, MODE_PRIVATE);
+        titleEditText.setText(sp.getString(Page_3_Title_info+Login,"").toString());
     }
 
 }

@@ -9,14 +9,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
-    // sign up button click
+    // declare variable
     Button signUpButton;
-
-    // Log in button click
     Button loginButton;
     EditText usernameEditText;
     EditText passwordEditText;
@@ -25,15 +22,17 @@ public class MainActivity extends AppCompatActivity {
     String verify_user_pass;
     static String Login;
 
-
+    // assign variables to their respective id
+    // set on click listener for both text box
+    // set on click listen for both button
+    // when log in button get click, call load account function
+    // when sign up button get click, call sign up page
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         setTitle("Journal by Sang Ly");
-
-        // Sign up
 
         signUpButton = (Button) findViewById(R.id.signUpButton);
         signUpButton.setOnClickListener(new View.OnClickListener() {
@@ -42,10 +41,6 @@ public class MainActivity extends AppCompatActivity {
                 open_sign_up_page();
             }
         });
-
-        // end sign up
-
-        // Log in
 
         usernameEditText = (EditText) findViewById(R.id.usernameEditText);
         usernameEditText.setOnClickListener(new View.OnClickListener() {
@@ -70,30 +65,28 @@ public class MainActivity extends AppCompatActivity {
                 load_account();
             }
         });
-
-
-        // end Log in
     }
 
-    // Sign up
+    // open sign up page
     public void open_sign_up_page(){
         Intent startNewActivity = new Intent(this, signUp.class);
         startActivity(startNewActivity);
     }
 
-    // log in
-
+    // declare variable
     private static String USERNAME_PASSWORD = "Journal_By_Sang_Ly";
     private static String USERNAME_PASSWORD_INFO = "username_password_info";
 
-
+    // verify if user input (username and password) matched with database user log in account
+    // if match not found, call log in error message function
+    // if match found, call access journal function
     public void load_account(){
         login_username = usernameEditText.getText().toString();
         login_password = passwordEditText.getText().toString();
         Login = login_username  + login_password;
 
-        SharedPreferences page1 = getSharedPreferences(USERNAME_PASSWORD, MODE_PRIVATE);
-        verify_user_pass = page1.getString(USERNAME_PASSWORD_INFO+Login,"");
+        SharedPreferences sp = getSharedPreferences(USERNAME_PASSWORD, MODE_PRIVATE);
+        verify_user_pass = sp.getString(USERNAME_PASSWORD_INFO+Login,"");
 
         if(verify_user_pass.toLowerCase().equals( Login.toLowerCase()) && Login.toLowerCase() !=  ""){
             access_journal();
@@ -103,10 +96,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // display journal page
     public void access_journal(){
         Intent startNewActivity = new Intent(this, Journal.class);
         startActivity(startNewActivity);
     }
+
+    // display error message alert box
     public void Login_Error_Message(){
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         builder.setMessage("Incorrect Username and Password");
@@ -120,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
         builder.show();
     }
 
+    // re-assign username and password text box
     public void clear_user_pass(){
         usernameEditText.setText("");
         passwordEditText.setText("");
